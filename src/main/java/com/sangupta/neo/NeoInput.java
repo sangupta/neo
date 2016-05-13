@@ -13,6 +13,12 @@ public class NeoInput {
     
     private final Map<String, Object> properties = new HashMap<>();
     
+    /**
+     * Read user input for all parameters that are defined.
+     * 
+     * @param params
+     * @return
+     */
     public Map<String, Object> getUserInput(UserInputParam[] params) {
         if(AssertUtils.isEmpty(params)) {
             // nothing to do
@@ -29,6 +35,12 @@ public class NeoInput {
         return this.properties;
     }
 
+    /**
+     * Return the value of the user-input converting it to proper type into an {@link Object}.
+     * 
+     * @param param
+     * @return
+     */
     private Object readParam(UserInputParam param) {
         if(!paramShouldBeRead(param)) {
             return null;
@@ -45,13 +57,29 @@ public class NeoInput {
             prompt = prompt + ": ";
         }
         
+        // process with velocity only if it has a velocity variable in it
+        if(prompt.contains("$")) {
+            prompt = VelocityUtils.processWithVelocity(prompt, this.properties);
+        }
+        
         String input = ConsoleUtils.readLine(prompt, !param.required);
         if(!param.required) {
             if(AssertUtils.isBlank(input)) {
-                input = param.value;
+                input = VelocityUtils.processWithVelocity(param.value, this.properties);
             }
         }
         
+        return convertInputToType(param, input);
+    }
+
+    /**
+     * Convert the given user-input to the type defined in template.
+     * 
+     * @param param
+     * @param input
+     * @return
+     */
+    private Object convertInputToType(UserInputParam param, String input) {
         // convert the value to proper type
         switch(param.type) {
             case "string":
@@ -75,7 +103,14 @@ public class NeoInput {
                 throw new NeoRuntimeException("Unknown param type detected as: " + param.type);
         }
     }
-
+    
+    /**
+     * Convert user input into a {@link List} of {@link String} considering values
+     * are comma-separated.
+     *  
+     * @param input
+     * @return
+     */
     private static List<String> splitToList(String input) {
         List<String> list = new ArrayList<>();
         
@@ -91,6 +126,13 @@ public class NeoInput {
         return list;
     }
 
+    /**
+     * Convert user input into a {@link String}-array considering values
+     * are comma-separated.
+     * 
+     * @param input
+     * @return
+     */
     private static String[] splitToArray(String input) {
         if(AssertUtils.isEmpty(input)) {
             return StringUtils.EMPTY_STRING_LIST;
@@ -104,6 +146,13 @@ public class NeoInput {
         return tokens;
     }
 
+    /**
+     * Decide if the parameter should be read from user or not, checking if the
+     * conditions specified in the param are met.
+     *  
+     * @param param
+     * @return
+     */
     private boolean paramShouldBeRead(UserInputParam param) {
         if(AssertUtils.areEmpty(param.ifTrue, param.ifFalse)) {
             return true;
@@ -132,6 +181,13 @@ public class NeoInput {
         return result;
     }
     
+    /**
+     * Convert the value to a {@link Boolean} value.
+     * 
+     * @param property
+     * @param defaultValue
+     * @return
+     */
     private boolean getBoolean(String property, boolean defaultValue) {
         Object bool = this.properties.get(property);
         if(bool == null) {

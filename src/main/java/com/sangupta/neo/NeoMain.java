@@ -2,6 +2,8 @@ package com.sangupta.neo;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
+
 import com.sangupta.jerry.util.AssertUtils;
 
 /**
@@ -28,9 +30,19 @@ public class NeoMain {
             return;
         }
         
-        NeoGenerator generator = new NeoGenerator(new File(projectTemplate));
-        generator.initialize();
-        generator.generateIn(new File(projectDir));
+        // TODO: remove this - instead throw an error
+        FileUtils.deleteQuietly(new File(projectDir));
+        
+        // start generation
+        try {
+            NeoGenerator generator = new NeoGenerator(new File(projectTemplate));
+            generator.initialize();
+            generator.generateIn(new File(projectDir));
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("\n\nGeneration complete");
     }
 
 }
