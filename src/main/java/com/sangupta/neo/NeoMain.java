@@ -3,7 +3,6 @@ package com.sangupta.neo;
 import java.io.File;
 
 import com.sangupta.jerry.util.AssertUtils;
-import com.sangupta.jerry.util.ConsoleUtils;
 
 /**
  * Main entry point for the Neo project creation tool.
