@@ -109,7 +109,7 @@ public class NeoGenerator {
      * 
      */
     public void initialize() {
-        this.properties = NeoInput.getUserInput(this.template.params);
+        this.properties = new NeoInput().getUserInput(this.template.params);
     }
     
 }

@@ -11,23 +11,29 @@ import com.sangupta.jerry.util.StringUtils;
 
 public class NeoInput {
     
-    public static Map<String, Object> getUserInput(UserInputParam[] params) {
-        Map<String, Object> result = new HashMap<>();
-        
+    private final Map<String, Object> properties = new HashMap<>();
+    
+    public Map<String, Object> getUserInput(UserInputParam[] params) {
         if(AssertUtils.isEmpty(params)) {
             // nothing to do
-            return result;
+            return this.properties;
         }
         
         for(UserInputParam param : params) {
             Object paramValue = readParam(param);
-            result.put(param.name, paramValue);
+            if(paramValue != null) {
+                this.properties.put(param.name, paramValue);
+            }
         }
         
-        return result;
+        return this.properties;
     }
 
-    private static Object readParam(UserInputParam param) {
+    private Object readParam(UserInputParam param) {
+        if(!paramShouldBeRead(param)) {
+            return null;
+        }
+        
         String prompt = param.prompt;
         if(AssertUtils.isEmpty(prompt)) {
             prompt = param.name;
@@ -96,6 +102,47 @@ public class NeoInput {
         }
         
         return tokens;
+    }
+
+    private boolean paramShouldBeRead(UserInputParam param) {
+        if(AssertUtils.areEmpty(param.ifTrue, param.ifFalse)) {
+            return true;
+        }
+        
+        // by default all variables should be read
+        boolean result = true;
+        
+        // if true
+        if(AssertUtils.isNotEmpty(param.ifTrue)) {
+            result = getBoolean(param.ifTrue, false);
+            if(!result) {
+                // variable should not be read
+                return false;
+            }
+        }
+        
+        // if false
+        if(AssertUtils.isNotEmpty(param.ifFalse)) {
+            result = result & !getBoolean(param.ifFalse, false);
+            if(!result) {
+                return false;
+            }
+        }
+        
+        return result;
+    }
+    
+    private boolean getBoolean(String property, boolean defaultValue) {
+        Object bool = this.properties.get(property);
+        if(bool == null) {
+            return defaultValue;
+        }
+        
+        if(bool instanceof Boolean) {
+            return (Boolean) bool;
+        }
+        
+        return StringUtils.getBoolean(bool.toString(), defaultValue);
     }
 
 }

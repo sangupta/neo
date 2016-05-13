@@ -11,6 +11,10 @@ public class UserInputParam {
     public String value = "";
     
     public boolean required = false;
+    
+    public String ifTrue;
+    
+    public String ifFalse;
 
     @Override
     public String toString() {
