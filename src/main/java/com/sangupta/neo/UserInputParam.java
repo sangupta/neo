@@ -4,13 +4,13 @@ public class UserInputParam {
     
     public String name;
     
-    public String type;
+    public String type = "string";
     
     public String prompt;
     
-    public String defaultValue;
+    public String value = "";
     
-    public boolean required;
+    public boolean required = false;
 
     @Override
     public String toString() {
