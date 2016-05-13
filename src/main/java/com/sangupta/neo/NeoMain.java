@@ -17,7 +17,7 @@ public class NeoMain {
     public static void main(String[] args) {
 //        String projectTemplate = ConsoleUtils.readLine("Project template: ", true);
         
-        String projectTemplate = "c:/aem-work/aem-neo";
+        String projectTemplate = "c:/git/lifeline/neo-aem62";
         if(AssertUtils.isEmpty(projectTemplate)) {
             System.out.println("Project template is required.");
             return;
