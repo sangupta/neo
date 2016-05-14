@@ -47,6 +47,12 @@
             <version>1.7</version>
         </dependency>
 
+        <!-- For discovering velocity directives -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -35,9 +35,9 @@ public class NeoMain {
         
         // start generation
         try {
-            NeoGenerator generator = new NeoGenerator(new File(projectTemplate));
+            NeoGenerator generator = NeoGenerator.createInstance(new File(projectTemplate), new File(projectDir));
             generator.initialize();
-            generator.generateIn(new File(projectDir));
+            generator.generate();
         } catch(Exception e) {
             e.printStackTrace();
         }

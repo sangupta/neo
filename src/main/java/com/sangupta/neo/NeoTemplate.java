@@ -11,6 +11,8 @@ public class NeoTemplate {
     public String description;
     
     public UserInputParam[] params;
+    
+    public NeoProcess[] process;
 
     /**
      * Run integrity check for this template.

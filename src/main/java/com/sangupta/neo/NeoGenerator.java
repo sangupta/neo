@@ -25,11 +25,28 @@ public class NeoGenerator {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(NeoGenerator.class);
     
+    private static NeoGenerator INSTANCE = null;
+    
     private final File templateDir;
+    
+    private final File projectFolder;
     
     private final NeoTemplate template;
 
     private Map<String, Object> properties;
+    
+    public static NeoGenerator getInstance() {
+        return INSTANCE;
+    }
+    
+    public static synchronized NeoGenerator createInstance(File templateDir, File projectFolder) {
+        if(INSTANCE != null) {
+            return INSTANCE;
+        }
+        
+        INSTANCE = new NeoGenerator(templateDir, projectFolder);
+        return INSTANCE;
+    }
     
     /**
      * Constructor
@@ -40,8 +57,9 @@ public class NeoGenerator {
      *            like github or someplace so that we can read templates
      *            directly from there.
      */
-    public NeoGenerator(File templateDir) {
+    private NeoGenerator(File templateDir, File projectFolder) {
         this.templateDir = templateDir;
+        this.projectFolder = projectFolder;
         this.template = readNeoProjectTemplate();
     }
 
@@ -73,7 +91,7 @@ public class NeoGenerator {
      * 
      * @param projectFolder
      */
-    public void generateIn(File projectFolder) {
+    public void generate() {
         if(LOGGER.isDebugEnabled()) {
             LOGGER.debug("Properties from user input are as under:");
             for(Entry<String, Object> entry : this.properties.entrySet()) {
@@ -94,6 +112,33 @@ public class NeoGenerator {
             }
         } else {
             LOGGER.info("Skipping data folder as it is non-existent");
+        }
+        
+        runProcesses();
+    }
+
+    private void runProcesses() {
+        if(AssertUtils.isEmpty(this.template.process)) {
+            return;
+        }
+        // run each command as specified in the process section
+        for(NeoProcess process : this.template.process) {
+            // first preference is of commands
+            runProcessCommand(process);
+        }
+    }
+
+    private void runProcessCommand(NeoProcess process) {
+        if(AssertUtils.isEmpty(process.commands)) {
+            return;
+        }
+
+        for(String command : process.commands) {
+            if(AssertUtils.isEmpty(command)) {
+                continue;
+            }
+
+            VelocityUtils.processWithVelocity(command, this.properties);
         }
     }
     
@@ -155,7 +200,7 @@ public class NeoGenerator {
      * 
      * @param relativePath
      */
-    protected File getResource(String relativePath) {
+    public File getResource(String relativePath) {
         File file = new File(this.templateDir, relativePath);
         if(file.exists() && file.canRead()) {
             return file;
@@ -164,7 +209,7 @@ public class NeoGenerator {
         return null;
     }
     
-    protected String getResourceContents(String relativePath) {
+    public String getResourceContents(String relativePath) {
         File file = this.getResource(relativePath);
         if(file == null) {
             return null;
@@ -185,6 +230,12 @@ public class NeoGenerator {
      */
     public void initialize() {
         this.properties = new NeoInput().getUserInput(this.template.params);
+    }
+    
+    // Usual accessors follow
+
+    public File getProjectFolder() {
+        return projectFolder;
     }
     
 }
