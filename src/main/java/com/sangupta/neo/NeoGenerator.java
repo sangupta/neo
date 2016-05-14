@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.GsonUtils;
+import com.sangupta.jerry.util.StringUtils;
 
 /**
  * {@link NeoGenerator} takes care of reading the project template and
@@ -121,6 +122,7 @@ public class NeoGenerator {
         if(AssertUtils.isEmpty(this.template.process)) {
             return;
         }
+        
         // run each command as specified in the process section
         for(NeoProcess process : this.template.process) {
             // first preference is of commands
@@ -132,14 +134,44 @@ public class NeoGenerator {
         if(AssertUtils.isEmpty(process.commands)) {
             return;
         }
+        
+        if(AssertUtils.isEmpty(process.condition)) {
+            // if there is no condition we need not build the script
+            if(AssertUtils.isNotEmpty(process.message)) {
+                String message = VelocityUtils.processWithVelocity(process.message, this.properties);
+                System.out.println(message);
+            }
 
+            // just run each command without worry
+            for(String command : process.commands) {
+                if(AssertUtils.isEmpty(command)) {
+                    continue;
+                }
+
+                VelocityUtils.processWithVelocity(command, this.properties);
+            }
+            
+            return;
+        }
+        
+        StringBuilder script = new StringBuilder();
+        script.append("#if (" + process.condition + ")");
+        script.append(StringUtils.SYSTEM_NEW_LINE);
+        script.append("#prompt (\"" + process.message + "\")");
+        script.append(StringUtils.SYSTEM_NEW_LINE);
         for(String command : process.commands) {
             if(AssertUtils.isEmpty(command)) {
                 continue;
             }
-
-            VelocityUtils.processWithVelocity(command, this.properties);
+            script.append(command);
+            script.append(StringUtils.SYSTEM_NEW_LINE);
         }
+        script.append("#end");
+        script.append(StringUtils.SYSTEM_NEW_LINE);
+        
+        // execute the script
+        String contents = script.toString();
+        VelocityUtils.processWithVelocity(contents, this.properties);
     }
     
     /**
@@ -236,6 +268,18 @@ public class NeoGenerator {
 
     public File getProjectFolder() {
         return projectFolder;
+    }
+
+    public void addProperty(String property, String value) {
+        this.properties.put(property, value);
+    }
+    
+    public void removeProperty(String property) {
+        this.properties.remove(property);
+    }
+
+    public Map<String, Object> getProperties() {
+        return this.properties;
     }
     
 }
