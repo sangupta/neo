@@ -23,7 +23,7 @@ public class CopyFileDirective extends Directive {
     
 	@Override
 	public String getName() {
-		return "copyfile";
+		return "copyFile";
 	}
 
 	@Override

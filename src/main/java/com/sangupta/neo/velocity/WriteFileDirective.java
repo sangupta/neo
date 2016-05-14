@@ -23,7 +23,7 @@ public class WriteFileDirective extends Directive {
     
 	@Override
 	public String getName() {
-		return "writefile";
+		return "writeFile";
 	}
 
 	@Override

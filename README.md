@@ -11,12 +11,24 @@
 
 ## Available commands
 
-* copydir
-* copyfile
+* addProperty
+* copyDir
+* copyFile
+* copyTemplate
 * log
 * mkdir
 * print
 * rmdir
+* writeFile
+
+## TODO commands
+
+* copyTemplate
+* renameFile
+* zip
+* unzip
+* wget
+
 
 ## Road Map
 
