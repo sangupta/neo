@@ -231,8 +231,9 @@ public class NeoGenerator {
      *             if something goes wrong
      */
     private void processDataFolder(File dataFolder, File projectFolder) throws IOException {
-        Collection<File> files = FileUtils.listFiles(dataFolder, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection<File> files = FileUtils.listFilesAndDirs(dataFolder, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         
+        System.out.println("Processing the data folder ...");
         if(AssertUtils.isEmpty(files)) {
             // nothing to do in data folder
             return;
@@ -240,6 +241,13 @@ public class NeoGenerator {
         
         // let's process each file
         for(File file : files) {
+            if(file.isDirectory()) {
+                // create a corresponding dir in project folder
+                File destDir = new File(projectFolder, getProjectFolderPath(dataFolder, file));
+                destDir.mkdirs();
+                continue;
+            }
+            
             LOGGER.info("Processing file: {}", file.getAbsolutePath());
             String filePath = getProjectFolderPath(dataFolder, file);
             File projectFile = new File(projectFolder, filePath);
