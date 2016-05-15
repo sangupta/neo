@@ -38,7 +38,7 @@ public class AddPropertyDirective extends Directive {
 		    property = String.valueOf(node.jjtGetChild(0).value(context));
 		}
         if(node.jjtGetChild(1) != null) {
-            value = String.valueOf(node.jjtGetChild(0).value(context));
+            value = String.valueOf(node.jjtGetChild(1).value(context));
         }
         
         if(AssertUtils.isEmpty(property)) {

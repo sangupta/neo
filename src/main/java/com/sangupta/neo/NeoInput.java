@@ -11,7 +11,11 @@ import com.sangupta.jerry.util.StringUtils;
 
 public class NeoInput {
     
-    private final Map<String, Object> properties = new HashMap<>();
+    private Map<String, Object> properties = new HashMap<>();
+    
+    public NeoInput(Map<String, Object> properties) {
+        this.properties = properties;
+    }
     
     /**
      * Read user input for all parameters that are defined.
@@ -19,10 +23,10 @@ public class NeoInput {
      * @param params
      * @return
      */
-    public Map<String, Object> getUserInput(UserInputParam[] params) {
+    public void getUserInput(UserInputParam[] params) {
         if(AssertUtils.isEmpty(params)) {
             // nothing to do
-            return this.properties;
+            return;
         }
         
         for(UserInputParam param : params) {
@@ -32,7 +36,7 @@ public class NeoInput {
             }
         }
         
-        return this.properties;
+        return;
     }
 
     /**
@@ -59,13 +63,13 @@ public class NeoInput {
         
         // process with velocity only if it has a velocity variable in it
         if(prompt.contains("$")) {
-            prompt = VelocityUtils.processWithVelocity(prompt, this.properties);
+            prompt = VelocityUtils.processWithVelocity(prompt);
         }
         
         String input = ConsoleUtils.readLine(prompt, !param.required);
         if(!param.required) {
             if(AssertUtils.isBlank(input)) {
-                input = VelocityUtils.processWithVelocity(param.value, this.properties);
+                input = VelocityUtils.processWithVelocity(param.value);
             }
         }
         

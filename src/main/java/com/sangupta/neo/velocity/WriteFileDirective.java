@@ -40,7 +40,7 @@ public class WriteFileDirective extends Directive {
 			file = String.valueOf(node.jjtGetChild(0).value(context));
 		}
         if(node.jjtGetChild(1) != null) {
-            contents = String.valueOf(node.jjtGetChild(0).value(context));
+            contents = String.valueOf(node.jjtGetChild(1).value(context));
         }
         
         if(AssertUtils.isEmpty(file)) {

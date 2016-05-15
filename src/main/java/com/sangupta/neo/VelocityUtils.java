@@ -34,19 +34,16 @@ public class VelocityUtils {
         }
     }
     
-    public static VelocityContext getContext(Map<String, Object> properties) {
-        // TODO: add caching
-        return new VelocityContext(properties);
-    }
-
-    public static String processWithVelocity(String contents, Map<String, Object> properties) {
+    public static String processWithVelocity(String contents) {
         try {
             if(AssertUtils.isEmpty(contents)) {
                 return contents;
             }
             
             StringWriter writer = new StringWriter();
-            Velocity.evaluate(getContext(properties), writer, "test", contents);
+            Map<String, Object> properties = NeoGenerator.getInstance().getProperties();
+            VelocityContext context = new VelocityContext(properties);
+            Velocity.evaluate(context, writer, "test", contents);
             
             return writer.toString();
         } catch(Exception e) {

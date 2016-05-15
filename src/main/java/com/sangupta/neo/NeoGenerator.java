@@ -3,6 +3,7 @@ package com.sangupta.neo;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,22 +25,55 @@ import com.sangupta.jerry.util.StringUtils;
  */
 public class NeoGenerator {
     
+    /**
+     * My private logger
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(NeoGenerator.class);
     
+    /**
+     * Singleton instance of {@link NeoGenerator}
+     */
     private static NeoGenerator INSTANCE = null;
     
+    /**
+     * The folder where the template is contained - all files for templates
+     * are resolved from this folder as base.
+     */
     private final File templateDir;
     
+    /**
+     * The folder where the project is to be created
+     */
     private final File projectFolder;
     
+    /**
+     * The {@link NeoTemplate} data as read and needs to be processed 
+     */
     private final NeoTemplate template;
 
-    private Map<String, Object> properties;
+    /**
+     * The properties which will be used when processing the template
+     */
+    private final Map<String, Object> properties = new HashMap<>();
     
+    /**
+     * Get the singleton instance of {@link NeoGenerator}.
+     * 
+     * @return
+     */
     public static NeoGenerator getInstance() {
         return INSTANCE;
     }
     
+    /**
+     * Create a singleton instance of {@link NeoGenerator} - if the instance is
+     * already created that will be returned, else the first instance is created
+     * and returned.
+     * 
+     * @param templateDir
+     * @param projectFolder
+     * @return
+     */
     public static synchronized NeoGenerator createInstance(File templateDir, File projectFolder) {
         if(INSTANCE != null) {
             return INSTANCE;
@@ -118,6 +152,10 @@ public class NeoGenerator {
         runProcesses();
     }
 
+    /**
+     * Run all processes that are mentioned in the {@link NeoTemplate}.
+     * 
+     */
     private void runProcesses() {
         if(AssertUtils.isEmpty(this.template.process)) {
             return;
@@ -130,6 +168,11 @@ public class NeoGenerator {
         }
     }
 
+    /**
+     * Run one set of commands as specified in the {@link NeoProcess}.
+     * 
+     * @param process
+     */
     private void runProcessCommand(NeoProcess process) {
         if(AssertUtils.isEmpty(process.commands)) {
             return;
@@ -138,7 +181,7 @@ public class NeoGenerator {
         if(AssertUtils.isEmpty(process.condition)) {
             // if there is no condition we need not build the script
             if(AssertUtils.isNotEmpty(process.message)) {
-                String message = VelocityUtils.processWithVelocity(process.message, this.properties);
+                String message = VelocityUtils.processWithVelocity(process.message);
                 System.out.println(message);
             }
 
@@ -148,7 +191,7 @@ public class NeoGenerator {
                     continue;
                 }
 
-                VelocityUtils.processWithVelocity(command, this.properties);
+                VelocityUtils.processWithVelocity(command);
             }
             
             return;
@@ -171,13 +214,21 @@ public class NeoGenerator {
         
         // execute the script
         String contents = script.toString();
-        VelocityUtils.processWithVelocity(contents, this.properties);
+        VelocityUtils.processWithVelocity(contents);
     }
     
     /**
-     * Copy all files from data folder to the project folder
+     * Copy all files from data folder to the project folder.
+     * 
      * @param dataFolder
-     * @throws IOException 
+     *            the <code>data</code> folder where all data for the template
+     *            is contained.
+     * 
+     * @param projectFolder
+     *            the folder where the project needs to be created
+     * 
+     * @throws IOException
+     *             if something goes wrong
      */
     private void processDataFolder(File dataFolder, File projectFolder) throws IOException {
         Collection<File> files = FileUtils.listFiles(dataFolder, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
@@ -203,7 +254,7 @@ public class NeoGenerator {
             String contents = FileUtils.readFileToString(file);
             
             // update contents via velocity
-            contents = VelocityUtils.processWithVelocity(contents, this.properties);
+            contents = VelocityUtils.processWithVelocity(contents);
             
             // write back to project folder
             FileUtils.writeStringToFile(projectFile, contents);
@@ -261,7 +312,7 @@ public class NeoGenerator {
      * 
      */
     public void initialize() {
-        this.properties = new NeoInput().getUserInput(this.template.params);
+        new NeoInput(this.properties).getUserInput(this.template.params);
     }
     
     // Usual accessors follow
@@ -270,14 +321,35 @@ public class NeoGenerator {
         return projectFolder;
     }
 
+    /**
+     * Add a new property to the list of {@link #properties}.
+     * 
+     * @param property
+     *            the name of the property
+     * 
+     * @param value
+     *            the value for the property
+     */
     public void addProperty(String property, String value) {
         this.properties.put(property, value);
     }
     
+    /**
+     * Remove the property from the list of {@link #properties}.
+     * 
+     * @param property
+     *            the name of the property to be removed
+     */
     public void removeProperty(String property) {
         this.properties.remove(property);
     }
 
+    /**
+     * Return the list of all the {@link #properties} as held by this
+     * instance of {@link NeoGenerator}.
+     * 
+     * @return
+     */
     public Map<String, Object> getProperties() {
         return this.properties;
     }

@@ -41,7 +41,7 @@ public class CopyTemplateDirective extends Directive {
 			source = String.valueOf(node.jjtGetChild(0).value(context));
 		}
         if(node.jjtGetChild(1) != null) {
-            destination = String.valueOf(node.jjtGetChild(0).value(context));
+            destination = String.valueOf(node.jjtGetChild(1).value(context));
         }
         
         if(AssertUtils.isEmpty(source)) {
@@ -59,7 +59,7 @@ public class CopyTemplateDirective extends Directive {
 		// TODO: check if we are not going out of parent folder
 		String content = FileUtils.readFileToString(src);
 		if(AssertUtils.isNotEmpty(content)) {
-		    content = VelocityUtils.processWithVelocity(content, generator.getProperties());
+		    content = VelocityUtils.processWithVelocity(content);
 		}
 		
 		System.out.println("Template copied from: " + src.getAbsolutePath() + " to: " + dest.getAbsolutePath());

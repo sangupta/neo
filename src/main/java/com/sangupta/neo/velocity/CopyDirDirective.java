@@ -40,7 +40,7 @@ public class CopyDirDirective extends Directive {
 			source = String.valueOf(node.jjtGetChild(0).value(context));
 		}
         if(node.jjtGetChild(1) != null) {
-            destination = String.valueOf(node.jjtGetChild(0).value(context));
+            destination = String.valueOf(node.jjtGetChild(1).value(context));
         }
         
         if(AssertUtils.isEmpty(source)) {
