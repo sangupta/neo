@@ -39,3 +39,5 @@
 * Support for ZIP based templates
 * Support for HTTP based template urls
 * Auto-update check for tool
+* Allow download/install of templates to local cache
+* Allow clean up of local cache
