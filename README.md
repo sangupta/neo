@@ -14,20 +14,21 @@
 
 ## Available commands
 
-* addProperty
-* copyDir
-* copyFile
-* copyTemplate
-* log
-* mkdir
-* print
-* rmdir
-* writeFile
+* addProperty - adds a property to current context
+* copyDir - copy directory from base folder to project folder
+* copyFile - copy file from base folder to project folder, no variable injection takes place
+* copyTemplate - copy file from base folder to project folder, variable injection as in a template happens
+* log - log the following line to logs
+* mkdir - create a new directory in the project folder
+* moveFile - move a file within the project folder
+* moveDir - move a directory within the project folder
+* print - print a line to console
+* rmdir - remove a directory from the project folder
+* rmFile - remove a file from the project folder
+* writeFile - write a new file in the project folder, without variable injection
 
 ## TODO commands
 
-* copyTemplate
-* renameFile
 * zip
 * unzip
 * wget
