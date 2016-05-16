@@ -9,7 +9,7 @@ a `Java Virtual Machine`.
 As I start working on **Adobe Experience Manager** big time, I realize that the only project scaffolding tool
 that is available is `lazybones` which again is dependent on `sdkman`. `sdkman` is written in `shell`,
 `cucumber`, and `grovy` and thus is very tightly tied to `*nix` systems. This in turn leaves that `lazybones`
-itself can only run on `*nix* or *OSX* systems. As many developers within the **Adobe Experience Manager** community,
+itself can only run on `*nix*` or `*OSX*` systems. As many developers within the **Adobe Experience Manager** community,
 use Windows for development, they are unable to utilize the power of `lazybones`.
 
 This led to the birth of `neo` - which being entirely written in Java - can be used across all platforms.
