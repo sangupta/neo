@@ -50,4 +50,12 @@ public class TemplatePath {
         this.path = path;
     }
     
+    @Override
+    public String toString() {
+        if(this.user != null) {
+            return this.provider.toString().toLowerCase() + ":" + this.user + "/" + this.repository;
+        }
+        
+        return this.provider.toString().toLowerCase() + ":/" + this.repository;
+    }
 }

@@ -23,6 +23,7 @@ package com.sangupta.neo;
 
 import com.sangupta.jerry.ApplicationContext;
 import com.sangupta.neo.commands.CreateProject;
+import com.sangupta.neo.commands.DownloadTemplate;
 import com.sangupta.neo.commands.InstallTemplate;
 import com.sangupta.neo.commands.ListTemplates;
 
@@ -49,7 +50,8 @@ public class NeoMain {
         CliBuilder<Runnable> builder = Cli.<Runnable>builder("neo")
                 .withDescription("Project scaffolding tool")
                 .withDefaultCommand(Help.class)
-                .withCommands(Help.class, CreateProject.class, InstallTemplate.class, ListTemplates.class);
+                .withCommands(Help.class, CreateProject.class, InstallTemplate.class, ListTemplates.class,
+                                DownloadTemplate.class);
         
         Cli<Runnable> cliParser = builder.build();
         

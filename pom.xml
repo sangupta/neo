@@ -101,6 +101,21 @@
             <artifactId>airline</artifactId>
             <version>0.7</version>
         </dependency>
+        
+        <!-- for HTTP thing -->
+        <dependency>
+            <groupId>com.sangupta</groupId>
+            <artifactId>jerry-http</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
+        <!-- for handling ZIP files -->
+        <dependency>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>zt-zip</artifactId>
+            <version>1.9</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>

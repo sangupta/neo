@@ -109,18 +109,18 @@ public class CacheManager {
     public static boolean installTemplate(File templateDir) throws IOException {
         File neo = new File(templateDir, "neo.json");
         if(!neo.exists()) {
-            System.out.println("No template found in folder (no neo.json found).");
+            System.out.println("No template found in folder (no neo.json found): " + templateDir.getAbsolutePath());
             return false;
         }
         
         if(!neo.isFile()) {
-            System.out.println("No template found in folder (no neo.json found).");
+            System.out.println("No template found in folder (no neo.json found): " + templateDir.getAbsolutePath());
             return false;
         }
         
         String contents = org.apache.commons.io.FileUtils.readFileToString(neo);
         if(AssertUtils.isEmpty(contents)) {
-            System.out.println("Template configuration neo.json is empty");
+            System.out.println("Template configuration neo.json is empty in folder: " + templateDir.getAbsolutePath());
             return false;
         }
         
