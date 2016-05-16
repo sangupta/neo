@@ -1,6 +1,18 @@
 # NEO
 
-`neo` is a project scaffolding tool that can create ready-to-use projects based on templates.
+`neo` is a project scaffolding tool that can create ready-to-use projects based on templates. It is somewhat
+like `yeoman` but different too. First, there are no dependencies to the project, except the requirement of
+a `Java Virtual Machine`. 
+
+## Birth of Neo?
+
+As I start working on **Adobe Experience Manager** big time, I realize that the only project scaffolding tool
+that is available is `lazybones` which again is dependent on `sdkman`. `sdkman` is written in `shell`,
+`cucumber`, and `grovy` and thus is very tightly tied to `*nix` systems. This in turn leaves that `lazybones`
+itself can only run on `*nix* or *OSX* systems. As many developers within the **Adobe Experience Manager** community,
+use Windows for development, they are unable to utilize the power of `lazybones`.
+
+This led to the birth of `neo` - which being entirely written in Java - can be used across all platforms.
 
 ## How does it work?
 
@@ -44,3 +56,25 @@
 * Auto-update check for tool
 * Allow download/install of templates to local cache
 * Allow clean up of local cache
+
+
+## License
+
+```
+neo - project scaffolding tool
+Copyright (c) 2016, Sandeep Gupta
+
+http://sangupta.com/projects/neo
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
