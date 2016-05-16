@@ -50,6 +50,7 @@ public class AddPropertyDirective extends Directive {
         }
 
 		NeoGenerator.getInstance().addProperty(property, value);
+		System.out.println("Added property: " + property + " = " + value);
 		return true;
 	}
 
