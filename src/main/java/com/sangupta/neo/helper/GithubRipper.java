@@ -12,56 +12,112 @@ import com.sangupta.jerry.http.WebInvoker;
 import com.sangupta.jerry.http.WebResponse;
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.GsonUtils;
+import com.sangupta.neo.NeoUtils;
 import com.sangupta.neo.cache.ProjectTemplate;
 import com.sangupta.neo.download.DownloadManager;
 
 public class GithubRipper {
     
-    
-    public static File downloadGithubTemplate(ProjectTemplate path) {
-        if(AssertUtils.isEmpty(path.path)) {
-            // download the entire repository in one shot
-            String url = "https://github.com/" + path.user + "/" + path.repository + "/archive/master.zip";
-            try {
-                return DownloadManager.downloadToTempFile(url);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            
-            return null;
+    /**
+     * Download a github project that hosts a {@link ProjectTemplate}.
+     * 
+     * @param project
+     * @return
+     */
+    public static File downloadGithubTemplate(ProjectTemplate project) {
+        if(AssertUtils.isEmpty(project.path)) {
+            return ripMasterZip(project);
         }
         
+        try {
+            return ripSpecificPath(project);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Rip the master branch ZIP and extract it to a local folder.
+     * 
+     * @param project
+     * @return
+     */
+    private static File ripMasterZip(ProjectTemplate project) {
+        // download the entire repository in one shot
+        String url = "https://github.com/" + project.user + "/" + project.repository + "/archive/master.zip";
+        try {
+            File downloaded = DownloadManager.downloadToTempFile(url);
+            
+            // this is a ZIP file and needs extraction
+            System.out.println("Template downloaded to: " + downloaded.getAbsolutePath());
+            
+            File folder = NeoUtils.extractToFolderIfNeeded(downloaded, project.repository);
+            if(folder == null) {
+                System.out.println("Don't know how to process downloaded file at: " + downloaded.getAbsolutePath());
+                return null;
+            }
+            
+            return folder;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+
+    private static File ripSpecificPath(ProjectTemplate project) throws IOException {
         // we need to crawl the site and download the folder - this happens using the API
-        final String base = "https://api.github.com/repos/" + path.user + "/" + path.repository + "/contents/";
-        String uri = base + path.path;
-        Queue<String> urls = new LinkedBlockingQueue<>();
-        urls.add(uri);
+        final String base = "https://api.github.com/repos/" + project.user + "/" + project.repository + "/contents/";
+        String uri = base + project.path;
+        Queue<String> apiUrls = new LinkedBlockingQueue<>();
+        apiUrls.add(uri);
         
         System.out.println("Retrieving a list of all files in the folder...");
-        List<String> filesToDownload = new ArrayList<>();
+        List<GithubEntry> filesToDownload = new ArrayList<>();
         do {
-            if(urls.isEmpty()) {
+            if(apiUrls.isEmpty()) {
                 break;
             }
             
-            String url = urls.poll();
+            String url = apiUrls.poll();
             WebResponse response = WebInvoker.getResponse(url);
             if(response == null || !response.isSuccess()) {
                 System.out.println("Unable to fetch valid response from github: " + url);
                 return null;
             }
             
-            parseResponse(response.getContent(), filesToDownload, urls, base);
+            parseResponse(response.getContent(), filesToDownload, apiUrls, base);
         } while(true);
         
+        // create a temp folder
+        File folder = NeoUtils.createTempFolder();
+        System.out.println("Github path will be downloaded to folder: " + folder.getAbsolutePath());
+        
         // start downloading all the files
-        for(String s : filesToDownload) {
-            System.out.println("Downloading file: " + s);
+        for(GithubEntry e : filesToDownload) {
+            System.out.println("Downloading file: " + e.downloadUrl);
+            String contents = WebInvoker.fetchResponse(e.downloadUrl);
+            
+            // write these back to disk
+            File downloadPath = new File(folder, getDownloadPath(project.path, e.path));
+            downloadPath.getParentFile().mkdirs();
+            org.apache.commons.io.FileUtils.writeStringToFile(downloadPath, contents);
         }
-        return null;
+        
+        System.out.println("Done downloading.");
+        return folder;
     }
     
-    private static void parseResponse(String json, List<String> filesToDownload, Queue<String> apiUrls, String base) {
+    private static String getDownloadPath(String path, String fullPath) {
+        if(!fullPath.startsWith(path)) {
+            return fullPath;
+        }
+        
+        return fullPath.substring(path.length());
+    }
+
+    private static void parseResponse(String json, List<GithubEntry> filesToDownload, Queue<String> apiUrls, String base) {
         if(AssertUtils.isEmpty(json)) {
             return;
         }
@@ -78,7 +134,7 @@ public class GithubRipper {
                 continue;
             }
             
-            filesToDownload.add(e.downloadUrl);
+            filesToDownload.add(e);
         }
     }
 

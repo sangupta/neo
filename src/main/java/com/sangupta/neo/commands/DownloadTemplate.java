@@ -24,17 +24,11 @@ package com.sangupta.neo.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Queue;
 
-import org.zeroturnaround.zip.ZipUtil;
-
-import com.sangupta.jerry.constants.SystemPropertyNames;
-import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.neo.cache.CacheManager;
 import com.sangupta.neo.cache.CacheUtils;
 import com.sangupta.neo.cache.ProjectTemplate;
 import com.sangupta.neo.cache.TemplateProvider;
-import com.sangupta.neo.download.DownloadManager;
 import com.sangupta.neo.helper.GithubRipper;
 
 import io.airlift.airline.Arguments;
@@ -93,48 +87,16 @@ public class DownloadTemplate implements Runnable {
             return;
         }
         
-        // extract the ZIP to a temporary path
-        System.out.println("Template downloaded to: " + downloaded.getAbsolutePath());
-        
-        File folder = extractToFolderIfNeeded(downloaded, path.repository);
-        if(folder == null) {
-            System.out.println("Don't know how to process downloaded file at: " + downloaded.getAbsolutePath());
+        if(!downloaded.isDirectory()) {
+            System.out.println("Unable to download the template.");
             return;
         }
         
         // now install the folder into cache
-        boolean installed = CacheManager.installTemplate(folder);
+        boolean installed = CacheManager.installTemplate(downloaded);
         if(installed) {
             System.out.println("Template successfully installed from url: " + downloaded.getAbsolutePath());
         }
-    }
-
-    private File extractToFolderIfNeeded(File zip, String repositoryName) {
-        if(zip.isDirectory()) {
-            return zip;
-        }
-        
-        if(!zip.getName().endsWith(".zip")) {
-            // not a zip file
-            return null;
-        }
-        
-        // create a temporary directory
-        File tempFolder = new File(System.getProperty(SystemPropertyNames.JAVA_TMPDIR));
-        File folder = new File(tempFolder, "neo-" + System.currentTimeMillis());
-        folder.mkdirs();
-        
-        // extract
-        ZipUtil.unpack(zip, folder);
-        
-        // check for sub-folder
-        File sub = new File(folder, repositoryName + "-master");
-        if(sub.exists() && sub.isDirectory()) {
-            return sub;
-        }
-        
-        // return the main folder
-        return folder;
     }
 
 }
