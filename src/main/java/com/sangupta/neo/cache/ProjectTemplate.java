@@ -21,7 +21,7 @@
 
 package com.sangupta.neo.cache;
 
-public class TemplatePath {
+public class ProjectTemplate {
 
     /**
      * The provider for this template
@@ -43,7 +43,7 @@ public class TemplatePath {
      */
     public final String path;
     
-    public TemplatePath(TemplateProvider provider, String user, String repository, String path) {
+    public ProjectTemplate(TemplateProvider provider, String user, String repository, String path) {
         this.provider = provider;
         this.user = user;
         this.repository = repository;

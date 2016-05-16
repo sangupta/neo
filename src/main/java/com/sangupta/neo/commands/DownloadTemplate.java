@@ -31,7 +31,7 @@ import com.sangupta.jerry.constants.SystemPropertyNames;
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.neo.cache.CacheManager;
 import com.sangupta.neo.cache.CacheUtils;
-import com.sangupta.neo.cache.TemplatePath;
+import com.sangupta.neo.cache.ProjectTemplate;
 import com.sangupta.neo.cache.TemplateProvider;
 import com.sangupta.neo.download.DownloadManager;
 
@@ -47,7 +47,7 @@ public class DownloadTemplate implements Runnable {
     @Override
     public void run() {
         for(String url : urls) {
-            TemplatePath path = CacheUtils.resovleTemplatePath(url);
+            ProjectTemplate path = CacheUtils.resovleTemplatePath(url);
             if(path.provider == TemplateProvider.UNKNOWN) {
                 System.out.println("Template installation not supported from the path: " + url);
                 continue;
@@ -73,7 +73,7 @@ public class DownloadTemplate implements Runnable {
         }
     }
 
-    private void downloadTemplate(TemplatePath path) throws IOException {
+    private void downloadTemplate(ProjectTemplate path) throws IOException {
         System.out.println("Installing template from URL: " + path);
         
         File downloaded = null;
@@ -135,7 +135,7 @@ public class DownloadTemplate implements Runnable {
         return folder;
     }
 
-    private File downloadGithubTemplate(TemplatePath path) {
+    private File downloadGithubTemplate(ProjectTemplate path) {
         if(AssertUtils.isEmpty(path.path)) {
             // download the entire repository in one shot
             String url = "https://github.com/" + path.user + "/" + path.repository + "/archive/master.zip";

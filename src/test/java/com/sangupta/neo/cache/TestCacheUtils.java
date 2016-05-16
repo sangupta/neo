@@ -31,7 +31,7 @@ public class TestCacheUtils {
         Assert.assertNull(CacheUtils.resovleTemplatePath(null));
         Assert.assertNull(CacheUtils.resovleTemplatePath(""));
         
-        TemplatePath path = CacheUtils.resovleTemplatePath("aem");
+        ProjectTemplate path = CacheUtils.resovleTemplatePath("aem");
         Assert.assertNotNull(path);
         Assert.assertEquals(TemplateProvider.CACHE, path.provider);
         Assert.assertNull(path.user);

@@ -52,7 +52,7 @@ public class CacheUtils {
      * @param templateName
      * @return
      */
-    public static TemplatePath resovleTemplatePath(String templateName) {
+    public static ProjectTemplate resovleTemplatePath(String templateName) {
         if(AssertUtils.isEmpty(templateName)) {
             return null;
         }
@@ -65,7 +65,7 @@ public class CacheUtils {
         
         if(!notFromCache) {
             // resolve this from the cache
-            return new TemplatePath(TemplateProvider.CACHE, null, templateName, null);
+            return new ProjectTemplate(TemplateProvider.CACHE, null, templateName, null);
         }
         
         // check if this is from file system
@@ -84,7 +84,7 @@ public class CacheUtils {
         File file = com.sangupta.jerry.util.FileUtils.resolveToFile(templateName);
         if(file.exists()) {
             // this is from file system
-            return new TemplatePath(TemplateProvider.LOCAL, null, file.getAbsolutePath(), null);
+            return new ProjectTemplate(TemplateProvider.LOCAL, null, file.getAbsolutePath(), null);
         }
         
         // this is from a provider
@@ -113,7 +113,7 @@ public class CacheUtils {
         String repository = reader.readTillNext('/');
         String path = reader.readRemaining();
         
-        return new TemplatePath(TemplateProvider.from(provider), user, repository, path);
+        return new ProjectTemplate(TemplateProvider.from(provider), user, repository, path);
     }
     
 }
