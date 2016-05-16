@@ -65,7 +65,7 @@ public class CreateProject implements Runnable {
           e.printStackTrace();
       } finally {
           long end = System.currentTimeMillis();
-          if(start > end) {
+          if(start > 0) {
               System.out.println("\n\nGeneration complete in " + (end - start) + " milliseconds.");
           }
       }
