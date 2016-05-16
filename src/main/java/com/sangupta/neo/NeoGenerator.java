@@ -138,7 +138,7 @@ public class NeoGenerator {
         }
         
         // run integrity check on template
-        template.checkIntegrity();
+        template.validate();
         
         // return the template
         return template;

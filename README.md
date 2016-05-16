@@ -14,6 +14,24 @@ use Windows for development, they are unable to utilize the power of `lazybones`
 
 This led to the birth of `neo` - which being entirely written in Java - can be used across all platforms.
 
+## Why Neo?
+
+Why do I had to write `neo` when I could have added a `yeoman` based **AEM** template. Many reasons:
+
+* I haven't worked with `yeoman` before.
+* Its based on `nodejs` that I don't have on my machine
+* **AEM** is built on `Java` and thus a Java solution makes sense
+* Security out of the box 
+* Last but not the least, I love to code
+* Allows for templates to be used from github/bitbucket/gitlab and more
+
+To achieve security, neo only provides basic commands/directives for a script to work. All actions like
+reading a file, writing a file, managing files/directories can happen only within the project folder specified.
+One cannot just go outside the project folder to work.
+
+There is no need to use the central repository that indexes all templates. You know of a repository on
+Github/Bitbucket/Gitlab - specify the url and use the template directly.
+
 ## How does it work?
 
 * A template is defined by presence of a `neo.json` file
@@ -56,7 +74,7 @@ This led to the birth of `neo` - which being entirely written in Java - can be u
 * Auto-update check for tool
 * Allow download/install of templates to local cache
 * Allow clean up of local cache
-
+* Support for `.neoignore` file in `data` folder
 
 ## License
 

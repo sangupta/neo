@@ -40,9 +40,9 @@ public class NeoTemplate {
      * Run integrity check for this template.
      * 
      */
-    public void checkIntegrity() {
-        if(AssertUtils.isEmpty(this.params)) {
-            return;
+    public void validate() {
+        if(AssertUtils.isEmpty(name) || AssertUtils.isEmpty(version)) {
+            throw new NeoRuntimeException("Template name is required");
         }
         
         for(NeoInputParam param : this.params) {
