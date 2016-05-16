@@ -24,6 +24,7 @@ package com.sangupta.neo.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Queue;
 
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -34,6 +35,7 @@ import com.sangupta.neo.cache.CacheUtils;
 import com.sangupta.neo.cache.ProjectTemplate;
 import com.sangupta.neo.cache.TemplateProvider;
 import com.sangupta.neo.download.DownloadManager;
+import com.sangupta.neo.helper.GithubRipper;
 
 import io.airlift.airline.Arguments;
 import io.airlift.airline.Command;
@@ -79,7 +81,7 @@ public class DownloadTemplate implements Runnable {
         File downloaded = null;
         switch(path.provider) {
             case GITHUB:
-                downloaded = downloadGithubTemplate(path);
+                downloaded = GithubRipper.downloadGithubTemplate(path);
                 break;
                 
             default:
@@ -135,22 +137,4 @@ public class DownloadTemplate implements Runnable {
         return folder;
     }
 
-    private File downloadGithubTemplate(ProjectTemplate path) {
-        if(AssertUtils.isEmpty(path.path)) {
-            // download the entire repository in one shot
-            String url = "https://github.com/" + path.user + "/" + path.repository + "/archive/master.zip";
-            try {
-                return DownloadManager.downloadToTempFile(url);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            
-            return null;
-        }
-        
-        // we need to crawl the site and download the folder - this happens
-        // using the API
-        return null;
-    }
-    
 }
