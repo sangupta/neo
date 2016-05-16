@@ -32,6 +32,39 @@ One cannot just go outside the project folder to work.
 There is no need to use the central repository that indexes all templates. You know of a repository on
 Github/Bitbucket/Gitlab - specify the url and use the template directly.
 
+## Usage
+
+Using `neo` is pretty simple. In the following examples, `neo` will mean `java -jar neo.jar`:
+
+### Creating a project
+
+```
+$ neo create -t aem62 c:/newProjectFolder
+```
+
+### Installing a template from local machine
+
+```
+$ neo install c:/templates/newTemplate
+```
+
+### Downloading a template from internet
+
+```
+$ neo download github:sangupta/neo-templates/aem62
+```
+
+### Listing all available templates in cache
+
+```
+$ neo list
+```
+
+## Developing NEO templates
+
+This section describes how you can build `neo` templates for project scaffolding.
+
+
 ## How does it work?
 
 * A template is defined by presence of a `neo.json` file
