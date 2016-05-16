@@ -40,3 +40,5 @@ target/*
 /target
 /target/
 dependency-reduced-pom.xml
+neo.sh
+neo.bat
