@@ -8,12 +8,13 @@ import java.util.Map;
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.ConsoleUtils;
 import com.sangupta.jerry.util.StringUtils;
+import com.sangupta.neo.domain.NeoInputParam;
 
-public class NeoInput {
+public class NeoInputManager {
     
     private Map<String, Object> properties = new HashMap<>();
     
-    public NeoInput(Map<String, Object> properties) {
+    public NeoInputManager(Map<String, Object> properties) {
         this.properties = properties;
     }
     
@@ -23,13 +24,13 @@ public class NeoInput {
      * @param params
      * @return
      */
-    public void getUserInput(UserInputParam[] params) {
+    public void getUserInput(NeoInputParam[] params) {
         if(AssertUtils.isEmpty(params)) {
             // nothing to do
             return;
         }
         
-        for(UserInputParam param : params) {
+        for(NeoInputParam param : params) {
             Object paramValue = readParam(param);
             if(paramValue != null) {
                 this.properties.put(param.name, paramValue);
@@ -45,7 +46,7 @@ public class NeoInput {
      * @param param
      * @return
      */
-    private Object readParam(UserInputParam param) {
+    private Object readParam(NeoInputParam param) {
         if(!paramShouldBeRead(param)) {
             return null;
         }
@@ -83,7 +84,7 @@ public class NeoInput {
      * @param input
      * @return
      */
-    private Object convertInputToType(UserInputParam param, String input) {
+    private Object convertInputToType(NeoInputParam param, String input) {
         // convert the value to proper type
         switch(param.type) {
             case "string":
@@ -157,7 +158,7 @@ public class NeoInput {
      * @param param
      * @return
      */
-    private boolean paramShouldBeRead(UserInputParam param) {
+    private boolean paramShouldBeRead(NeoInputParam param) {
         if(AssertUtils.areEmpty(param.ifTrue, param.ifFalse)) {
             return true;
         }

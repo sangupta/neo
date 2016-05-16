@@ -1,6 +1,7 @@
-package com.sangupta.neo;
+package com.sangupta.neo.domain;
 
 import com.sangupta.jerry.util.AssertUtils;
+import com.sangupta.neo.NeoRuntimeException;
 
 public class NeoTemplate {
     
@@ -10,7 +11,7 @@ public class NeoTemplate {
 
     public String description;
     
-    public UserInputParam[] params;
+    public NeoInputParam[] params;
     
     public NeoProcess[] process;
 
@@ -23,7 +24,7 @@ public class NeoTemplate {
             return;
         }
         
-        for(UserInputParam param : this.params) {
+        for(NeoInputParam param : this.params) {
             if(AssertUtils.isEmpty(param.name)) {
                 throw new NeoRuntimeException("Param name is empty in template");
             }

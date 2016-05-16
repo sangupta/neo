@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.GsonUtils;
 import com.sangupta.jerry.util.StringUtils;
+import com.sangupta.neo.domain.NeoProcess;
+import com.sangupta.neo.domain.NeoTemplate;
 
 /**
  * {@link NeoGenerator} takes care of reading the project template and
@@ -320,7 +322,7 @@ public class NeoGenerator {
      * 
      */
     public void initialize() {
-        new NeoInput(this.properties).getUserInput(this.template.params);
+        new NeoInputManager(this.properties).getUserInput(this.template.params);
     }
     
     // Usual accessors follow

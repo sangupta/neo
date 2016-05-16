@@ -1,6 +1,14 @@
-package com.sangupta.neo;
+package com.sangupta.neo.domain;
 
-public class UserInputParam {
+/**
+ * An input parameter that will be requested from the user after
+ * the template is read, and generation process is initiated. User
+ * parameters define how the project will be setup.
+ * 
+ * @author sangupta
+ *
+ */
+public class NeoInputParam {
     
     public String name;
     

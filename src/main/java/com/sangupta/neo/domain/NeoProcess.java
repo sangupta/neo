@@ -1,4 +1,4 @@
-package com.sangupta.neo;
+package com.sangupta.neo.domain;
 
 /**
  * A process step that determines the actions we need to perform
