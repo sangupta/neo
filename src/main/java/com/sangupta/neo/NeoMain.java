@@ -1,10 +1,11 @@
 package com.sangupta.neo;
 
-import java.io.File;
+import com.sangupta.neo.commands.CreateProject;
 
-import org.apache.commons.io.FileUtils;
-
-import com.sangupta.jerry.util.AssertUtils;
+import io.airlift.airline.Cli;
+import io.airlift.airline.Cli.CliBuilder;
+import io.airlift.airline.Help;
+import io.airlift.airline.ParseArgumentsUnexpectedException;
 
 /**
  * Main entry point for the Neo project creation tool.
@@ -15,41 +16,19 @@ import com.sangupta.jerry.util.AssertUtils;
 public class NeoMain {
     
     public static void main(String[] args) {
-//        String projectTemplate = ConsoleUtils.readLine("Project template: ", true);
+        @SuppressWarnings("unchecked")
+        CliBuilder<Runnable> builder = Cli.<Runnable>builder("neo")
+                .withDescription("Project scaffolding tool")
+                .withDefaultCommand(Help.class)
+                .withCommands(Help.class, CreateProject.class);
         
-        String projectTemplate = "c:/git/lifeline/neo-aem62";
-        if(AssertUtils.isEmpty(projectTemplate)) {
-            System.out.println("Project template is required.");
-            return;
-        }
+        Cli<Runnable> cliParser = builder.build();
         
-//        String projectDir = ConsoleUtils.readLine("Project folder: ", true);
-        String projectDir = "c:/aem-work/neo-test";
-        if(AssertUtils.isEmpty(projectDir)) {
-            System.out.println("Project folder is required.");
-            return;
-        }
-        
-        // TODO: remove this - instead throw an error
-        FileUtils.deleteQuietly(new File(projectDir));
-        
-        // start generation
-        long start = 0;
         try {
-            NeoGenerator generator = NeoGenerator.createInstance(new File(projectTemplate), new File(projectDir));
-            generator.initialize();
-            
-            start = System.currentTimeMillis();
-            generator.generate();
-        } catch(Exception e) {
-            e.printStackTrace();
-        } finally {
-            long end = System.currentTimeMillis();
-            if(start > end) {
-                System.out.println("\n\nGeneration complete in " + (end - start) + " milliseconds.");
-            }
+            cliParser.parse(args).run();
+        } catch(ParseArgumentsUnexpectedException e) {
+            System.out.println("Invalid command, use '$ neo help' for usage instructions!");
         }
-        
     }
-
+    
 }
