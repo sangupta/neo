@@ -34,15 +34,22 @@ public class NeoMain {
         FileUtils.deleteQuietly(new File(projectDir));
         
         // start generation
+        long start = 0;
         try {
             NeoGenerator generator = NeoGenerator.createInstance(new File(projectTemplate), new File(projectDir));
             generator.initialize();
+            
+            start = System.currentTimeMillis();
             generator.generate();
         } catch(Exception e) {
             e.printStackTrace();
+        } finally {
+            long end = System.currentTimeMillis();
+            if(start > end) {
+                System.out.println("\n\nGeneration complete in " + (end - start) + " milliseconds.");
+            }
         }
         
-        System.out.println("\n\nGeneration complete");
     }
 
 }
