@@ -2,6 +2,8 @@ package com.sangupta.neo.cache;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.FileUtils;
@@ -23,8 +25,14 @@ public class CacheManager {
      */
     private static final File CACHE_DIR;
     
+    /**
+     * Directory inside cache store where all templates are stored
+     */
     private static final File TEMPLATE_CACHE_DIR;
     
+    /**
+     * Initialize the directories
+     */
     static {
         File file = new File(FileUtils.getUsersHomeDirectory(), ".neo");
         if(!file.exists()) {
@@ -70,6 +78,13 @@ public class CacheManager {
         return false;
     }
 
+    /**
+     * Install a new template in the cache.
+     * 
+     * @param templateDir
+     * @return
+     * @throws IOException
+     */
     public static boolean installTemplate(File templateDir) throws IOException {
         File neo = new File(templateDir, "neo.json");
         if(!neo.exists()) {
@@ -99,4 +114,19 @@ public class CacheManager {
         org.apache.commons.io.FileUtils.copyDirectory(templateDir, repo);
         return true;
     }
+
+    public static List<CachedTemplate> getTemplatesInCache() {
+        List<CachedTemplate> templates = new ArrayList<>();
+        
+        File[] files = TEMPLATE_CACHE_DIR.listFiles();
+        
+        for(File file : files) {
+            if(file.isDirectory()) {
+                templates.add(new CachedTemplate(file.getName()));
+            }
+        }
+        
+        return templates;
+    }
+    
 }
