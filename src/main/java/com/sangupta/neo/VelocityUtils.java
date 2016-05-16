@@ -15,10 +15,23 @@ import org.slf4j.LoggerFactory;
 
 import com.sangupta.jerry.util.AssertUtils;
 
+/**
+ * Utility class that helps us run content through Apache {@link Velocity}
+ * and get the results.
+ * 
+ * @author sangupta
+ *
+ */
 public class VelocityUtils {
     
+    /**
+     * My private logger
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(VelocityUtils.class);
     
+    /**
+     * Load all custom Velocity directives
+     */
     static {
         // load all velocity tags
         Reflections reflections = new Reflections("com.sangupta.neo.velocity");
@@ -34,12 +47,18 @@ public class VelocityUtils {
         }
     }
     
+    /**
+     * Run the contents through {@link Velocity}.
+     * 
+     * @param contents
+     * @return
+     */
     public static String processWithVelocity(String contents) {
+        if(AssertUtils.isEmpty(contents)) {
+            return contents;
+        }
+        
         try {
-            if(AssertUtils.isEmpty(contents)) {
-                return contents;
-            }
-            
             StringWriter writer = new StringWriter();
             Map<String, Object> properties = NeoGenerator.getInstance().getProperties();
             VelocityContext context = new VelocityContext(properties);
