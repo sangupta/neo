@@ -16,6 +16,13 @@ import com.sangupta.neo.NeoUtils;
 import com.sangupta.neo.cache.ProjectTemplate;
 import com.sangupta.neo.download.DownloadManager;
 
+/**
+ * Class that helps rip github repositories from internet to local disk
+ * so that templates can be used from there.
+ * 
+ * @author sangupta
+ *
+ */
 public class GithubRipper {
     
     /**
@@ -66,6 +73,13 @@ public class GithubRipper {
         return null;
     }
 
+    /**
+     * Helps rip a specific path on github.
+     * 
+     * @param project
+     * @return
+     * @throws IOException
+     */
     private static File ripSpecificPath(ProjectTemplate project) throws IOException {
         // we need to crawl the site and download the folder - this happens using the API
         final String base = "https://api.github.com/repos/" + project.user + "/" + project.repository + "/contents/";
@@ -90,6 +104,11 @@ public class GithubRipper {
             parseResponse(response.getContent(), filesToDownload, apiUrls, base);
         } while(true);
         
+        if(AssertUtils.isEmpty(filesToDownload)) {
+            System.out.println("Nothing in the specified folder on github. Make sure the path is correct!");
+            return null;
+        }
+        
         // create a temp folder
         File folder = NeoUtils.createTempFolder();
         System.out.println("Github path will be downloaded to folder: " + folder.getAbsolutePath());
@@ -109,6 +128,13 @@ public class GithubRipper {
         return folder;
     }
     
+    /**
+     * Extract the path where we should save downloaded file to local disk.
+     * 
+     * @param path
+     * @param fullPath
+     * @return
+     */
     private static String getDownloadPath(String path, String fullPath) {
         if(!fullPath.startsWith(path)) {
             return fullPath;
@@ -117,6 +143,14 @@ public class GithubRipper {
         return fullPath.substring(path.length());
     }
 
+    /**
+     * Parse the repsonse from github API url.
+     * 
+     * @param json
+     * @param filesToDownload
+     * @param apiUrls
+     * @param base
+     */
     private static void parseResponse(String json, List<GithubEntry> filesToDownload, Queue<String> apiUrls, String base) {
         if(AssertUtils.isEmpty(json)) {
             return;
@@ -138,6 +172,12 @@ public class GithubRipper {
         }
     }
 
+    /**
+     * Two fields that we are interested in from github around this repository.
+     * 
+     * @author sangupta
+     *
+     */
     private static class GithubEntry {
         
         public String path;
