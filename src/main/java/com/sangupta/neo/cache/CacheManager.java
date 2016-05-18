@@ -136,6 +136,18 @@ public class CacheManager {
         return true;
     }
 
+    public static File getTemplate(ProjectTemplate projectTemplate) {
+        File[] files = TEMPLATE_CACHE_DIR.listFiles();
+        
+        for(File file : files) {
+            if(file.isDirectory() && file.getName().equals(projectTemplate.repository)) {
+                return file;
+            }
+        }
+        
+        return null;
+    }
+    
     public static List<CachedTemplate> getTemplatesInCache() {
         List<CachedTemplate> templates = new ArrayList<>();
         
@@ -165,5 +177,5 @@ public class CacheManager {
         
         return org.apache.commons.io.FileUtils.deleteQuietly(repo);
     }
-    
+
 }

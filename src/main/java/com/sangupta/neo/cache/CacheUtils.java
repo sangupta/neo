@@ -115,5 +115,5 @@ public class CacheUtils {
         
         return new ProjectTemplate(TemplateProvider.from(provider), user, repository, path);
     }
-    
+
 }

@@ -28,6 +28,9 @@ import org.apache.commons.io.FileUtils;
 
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.neo.NeoGenerator;
+import com.sangupta.neo.cache.CacheManager;
+import com.sangupta.neo.cache.CacheUtils;
+import com.sangupta.neo.cache.ProjectTemplate;
 
 import io.airlift.airline.Arguments;
 import io.airlift.airline.Command;
@@ -55,41 +58,47 @@ public class CreateProject implements Runnable {
             return;
         }
         
-        String projectTemplate = "c:/git/lifeline/neo-aem62";
+        ProjectTemplate projectTemplate = CacheUtils.resovleTemplatePath(templateName);
         
         execute(projectTemplate, folder.get(0));
     }
 
-    private static void execute(String projectTemplate, String projectDir) {
-      if(AssertUtils.isEmpty(projectTemplate)) {
-          System.out.println("Project template is required.");
-          return;
-      }
-      
-      if(AssertUtils.isEmpty(projectDir)) {
-          System.out.println("Project folder is required.");
-          return;
-      }
-      
-      // TODO: remove this - instead throw an error
-      FileUtils.deleteQuietly(new File(projectDir));
-      
-      // start generation
-      long start = 0;
-      try {
-          NeoGenerator generator = NeoGenerator.createInstance(new File(projectTemplate), new File(projectDir));
-          generator.initialize();
-          
-          start = System.currentTimeMillis();
-          generator.generate();
-      } catch(Exception e) {
-          e.printStackTrace();
-      } finally {
-          long end = System.currentTimeMillis();
-          if(start > 0) {
-              System.out.println("\n\nGeneration complete in " + (end - start) + " milliseconds.");
-          }
-      }
-      
-  }
+    private static void execute(ProjectTemplate projectTemplate, String projectDir) {
+        if (projectTemplate == null) {
+            System.out.println("Project template is required.");
+            return;
+        }
+        
+        File templateFolder = CacheManager.getTemplate(projectTemplate);
+        if (templateFolder == null) {
+            System.out.println("Project template is required.");
+            return;
+        }
+
+        if (AssertUtils.isEmpty(projectDir)) {
+            System.out.println("Project folder is required.");
+            return;
+        }
+
+        // TODO: remove this - instead throw an error
+        FileUtils.deleteQuietly(new File(projectDir));
+
+        // start generation
+        long start = 0;
+        try {
+            NeoGenerator generator = NeoGenerator.createInstance(templateFolder, new File(projectDir));
+            generator.initialize();
+
+            start = System.currentTimeMillis();
+            generator.generate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            long end = System.currentTimeMillis();
+            if (start > 0) {
+                System.out.println("\n\nGeneration complete in " + (end - start) + " milliseconds.");
+            }
+        }
+
+    }
 }
