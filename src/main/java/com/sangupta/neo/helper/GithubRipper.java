@@ -59,12 +59,19 @@ public class GithubRipper {
             // this is a ZIP file and needs extraction
             System.out.println("Template downloaded to: " + downloaded.getAbsolutePath());
             
-            File folder = NeoUtils.extractToFolderIfNeeded(downloaded, project.repository);
+            File folder = NeoUtils.extractToFolderIfNeeded(downloaded);
             if(folder == null) {
                 System.out.println("Don't know how to process downloaded file at: " + downloaded.getAbsolutePath());
                 return null;
             }
             
+            // pick up the sub-folder
+            File sub = new File(folder, project.repository + "-master");
+            if(sub.exists() && sub.isDirectory()) {
+                return sub;
+            }
+
+            // don't know what to do
             return folder;
         } catch (IOException e) {
             e.printStackTrace();

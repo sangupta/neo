@@ -8,7 +8,7 @@ import com.sangupta.jerry.constants.SystemPropertyNames;
 
 public class NeoUtils {
 
-    public static File extractToFolderIfNeeded(File zip, String repositoryName) {
+    public static File extractToFolderIfNeeded(File zip) {
         if(zip.isDirectory()) {
             return zip;
         }
@@ -22,12 +22,6 @@ public class NeoUtils {
         
         // extract
         ZipUtil.unpack(zip, folder);
-        
-        // check for sub-folder
-        File sub = new File(folder, repositoryName + "-master");
-        if(sub.exists() && sub.isDirectory()) {
-            return sub;
-        }
         
         // return the main folder
         return folder;

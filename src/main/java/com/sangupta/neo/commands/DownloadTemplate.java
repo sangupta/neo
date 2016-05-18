@@ -29,6 +29,7 @@ import com.sangupta.neo.cache.CacheManager;
 import com.sangupta.neo.cache.CacheUtils;
 import com.sangupta.neo.cache.ProjectTemplate;
 import com.sangupta.neo.cache.TemplateProvider;
+import com.sangupta.neo.helper.BitbucketRipper;
 import com.sangupta.neo.helper.GithubRipper;
 
 import io.airlift.airline.Arguments;
@@ -69,13 +70,17 @@ public class DownloadTemplate implements Runnable {
         }
     }
 
-    private void downloadTemplate(ProjectTemplate path) throws IOException {
-        System.out.println("Installing template from URL: " + path);
+    private void downloadTemplate(ProjectTemplate project) throws IOException {
+        System.out.println("Installing template from URL: " + project);
         
         File downloaded = null;
-        switch(path.provider) {
+        switch(project.provider) {
             case GITHUB:
-                downloaded = GithubRipper.downloadGithubTemplate(path);
+                downloaded = GithubRipper.downloadGithubTemplate(project);
+                break;
+                
+            case BITBUCKET:
+                downloaded = BitbucketRipper.downloadBitbucketTemplate(project);
                 break;
                 
             default:
