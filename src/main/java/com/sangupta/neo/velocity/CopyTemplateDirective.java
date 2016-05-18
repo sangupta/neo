@@ -83,6 +83,7 @@ public class CopyTemplateDirective extends Directive {
 		    content = VelocityUtils.processWithVelocity(content);
 		}
 		
+		FileUtils.writeStringToFile(dest, content);
 		System.out.println("Template copied from: " + src.getAbsolutePath() + " to: " + dest.getAbsolutePath());
 		return true;
 	}
