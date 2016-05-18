@@ -36,7 +36,7 @@ Github/Bitbucket/Gitlab - specify the url and use the template directly.
 
 * Create a project using `neo.json` scaffolding template
 * Install a template from local machine
-* Download a template from Github
+* Download a template from Github.com, or Bitbucket.org
 
 ## Road Map
 
