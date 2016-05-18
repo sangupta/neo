@@ -149,5 +149,21 @@ public class CacheManager {
         
         return templates;
     }
+
+    public static boolean removeTemplate(String templateName) {
+        File repo = new File(TEMPLATE_CACHE_DIR, templateName);
+        if(!repo.exists()) {
+            System.out.println("Template does not exists: " + templateName);
+            return false;
+        }
+
+        if(!repo.isDirectory()) {
+            System.out.println("Template name is invalid: " + templateName);
+            return false;
+        }
+        
+        
+        return org.apache.commons.io.FileUtils.deleteQuietly(repo);
+    }
     
 }

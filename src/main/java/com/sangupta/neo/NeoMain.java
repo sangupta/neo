@@ -26,6 +26,7 @@ import com.sangupta.neo.commands.CreateProject;
 import com.sangupta.neo.commands.DownloadTemplate;
 import com.sangupta.neo.commands.InstallTemplate;
 import com.sangupta.neo.commands.ListTemplates;
+import com.sangupta.neo.commands.RemoveTemplate;
 
 import io.airlift.airline.Cli;
 import io.airlift.airline.Cli.CliBuilder;
@@ -51,7 +52,7 @@ public class NeoMain {
                 .withDescription("Project scaffolding tool")
                 .withDefaultCommand(Help.class)
                 .withCommands(Help.class, CreateProject.class, InstallTemplate.class, ListTemplates.class,
-                                DownloadTemplate.class);
+                                DownloadTemplate.class, RemoveTemplate.class);
         
         Cli<Runnable> cliParser = builder.build();
         
