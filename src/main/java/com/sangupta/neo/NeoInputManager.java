@@ -188,25 +188,39 @@ public class NeoInputManager {
         boolean result = true;
         
         // if true
-        if(AssertUtils.isNotEmpty(param.ifTrue)) {
-            result = getBoolean(param.ifTrue, false);
-            if(!result) {
-                // variable should not be read
-                return false;
-            }
-        }
+        result = result & evaluateCondition(param.ifTrue);
         
         // if false
-        if(AssertUtils.isNotEmpty(param.ifFalse)) {
-            result = result & !getBoolean(param.ifFalse, false);
-            if(!result) {
-                return false;
-            }
-        }
+        result = result & evaluateCondition(param.ifFalse);
         
         return result;
     }
     
+    private boolean evaluateCondition(String condition) {
+        if(AssertUtils.isEmpty(condition)) {
+            return true;
+        }
+        
+        condition = condition.trim();
+        
+        // check for expression
+        if(condition.contains(" ")) {
+            String content = VelocityUtils.processWithVelocity("#if (" + condition + ") evaluate #end");
+            if(content != null && content.contains("evaluate")) {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        if(condition.startsWith("$")) {
+            condition = condition.substring(1);
+        }
+        
+        // this is just a variable
+        return getBoolean(condition, false);
+    }
+
     /**
      * Convert the value to a {@link Boolean} value.
      * 
