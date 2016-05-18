@@ -115,6 +115,14 @@ public class GithubRipper {
         
         // start downloading all the files
         for(GithubEntry e : filesToDownload) {
+            if(AssertUtils.isEmpty(e.downloadUrl)) {
+                // this is a folder - let's create one in the local disk
+                File downloadPath = new File(folder, getDownloadPath(project.path, e.path));
+                downloadPath.mkdirs();
+                continue;
+            }
+            
+
             System.out.println("Downloading file: " + e.downloadUrl);
             String contents = WebInvoker.fetchResponse(e.downloadUrl);
             
@@ -162,12 +170,6 @@ public class GithubRipper {
         }
         
         for(GithubEntry e : entries) {
-            if(AssertUtils.isEmpty(e.downloadUrl)) {
-                // this is a folder
-                apiUrls.add(base + e.path);
-                continue;
-            }
-            
             filesToDownload.add(e);
         }
     }
