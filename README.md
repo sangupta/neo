@@ -47,6 +47,9 @@ Github/Bitbucket/Gitlab - specify the url and use the template directly.
 * Allow download/install of templates to local cache
 * Allow clean up of local cache
 * Support for `.neoignore` file in `data` folder
+* Allow for `update` of templates using a URI
+* Allow for purging of older versions of templates
+* Embed `author` information in the template
 
 ## Usage
 
