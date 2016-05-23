@@ -126,7 +126,7 @@ public class GithubRipper {
             WebResponse response = WebInvoker.getResponse(url);
             if(response == null || !response.isSuccess()) {
                 System.out.println("Unable to fetch valid response from github: " + url);
-                return null;
+                continue;
             }
             
             parseResponse(response.getContent(), filesToDownload, apiUrls, base);
@@ -198,6 +198,12 @@ public class GithubRipper {
         }
         
         for(GithubEntry e : entries) {
+            if(AssertUtils.isEmpty(e.downloadUrl)) {
+                // this is a folder
+                apiUrls.add(base + e.path);
+                continue;
+            }
+            
             filesToDownload.add(e);
         }
     }
@@ -213,6 +219,11 @@ public class GithubRipper {
         public String path;
         
         public String downloadUrl;
+        
+        @Override
+        public String toString() {
+            return this.path;
+        }
 
     }
 
