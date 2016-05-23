@@ -45,6 +45,8 @@ import io.airlift.airline.ParseArgumentsUnexpectedException;
 public class NeoMain {
     
     public static void main(String[] args) {
+//        args = new String[] { "download", "github:sangupta/neo-templates/aem-6.2" };
+        
         System.out.println("\nNeo Project Scaffolding Tool, Version " + ApplicationContext.PROJECT_VERSION);
         System.out.println("Copyright (c) 2016, Sandeep Gupta.\n");
         @SuppressWarnings("unchecked")
