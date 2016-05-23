@@ -40,13 +40,7 @@ Github/Bitbucket/Gitlab - specify the url and use the template directly.
 
 ## Road Map
 
-* Allow to read templates from github/bitbucket and all
-* Support for ZIP based templates
-* Support for HTTP based template urls
-* Auto-update check for tool
-* Allow download/install of templates to local cache
-* Allow clean up of local cache
-* Support for `.neoignore` file in `data` folder
+Please refer to open issues at https://github.com/sangupta/neo/labels/enhancement for all the planned enhancements.
 
 ## Usage
 
