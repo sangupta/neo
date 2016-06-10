@@ -264,17 +264,24 @@ public class NeoGenerator {
         
         // let's process each file
         for(File file : files) {
+            LOGGER.info("Processing file: {}", file.getAbsolutePath());
+            String filePath = getProjectFolderPath(dataFolder, file);
+            
+            // process the filename itself with velocity as it may contain variables
+            if(filePath.contains("$")) {
+                filePath = org.apache.commons.lang.StringUtils.replace(filePath, "\\", "/");
+                filePath = VelocityUtils.processWithVelocity(filePath);
+            }
+
+            // go ahead and create the file
             if(file.isDirectory()) {
                 // create a corresponding dir in project folder
-                File destDir = new File(projectFolder, getProjectFolderPath(dataFolder, file));
+                File destDir = new File(projectFolder, filePath);
                 destDir.mkdirs();
                 continue;
             }
             
-            LOGGER.info("Processing file: {}", file.getAbsolutePath());
-            String filePath = getProjectFolderPath(dataFolder, file);
             File projectFile = new File(projectFolder, filePath);
-            
             if(file.length() == 0) {
                 // create an empty 
                 FileUtils.writeStringToFile(projectFile, "");
