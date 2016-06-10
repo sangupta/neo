@@ -54,7 +54,12 @@ public class NeoTemplate {
     public String updateUrl;
     
     /**
-     * The author information for this template
+     * The author information for this template, in case of a single author
+     */
+    public NeoTemplateAuthor author;
+    
+    /**
+     * The author information for this template, in case of multiple authors
      */
     public NeoTemplateAuthor[] authors;
     
