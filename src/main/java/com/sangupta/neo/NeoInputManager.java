@@ -77,18 +77,17 @@ public class NeoInputManager {
             prompt = param.name;
         }
         
-        if(!param.required && AssertUtils.isNotEmpty(param.value)) {
-            prompt = prompt + " [" + param.value + "]: ";
-        } else {
-            prompt = prompt + ": ";
+        String displayPrompt = prompt;
+        if(AssertUtils.isNotEmpty(param.value)) {
+            displayPrompt = prompt + " [" + param.value + "]: ";
         }
         
         // process with velocity only if it has a velocity variable in it
-        if(prompt.contains("$")) {
-            prompt = VelocityUtils.processWithVelocity(prompt);
+        if(displayPrompt.contains("$")) {
+            displayPrompt = VelocityUtils.processWithVelocity(displayPrompt);
         }
         
-        String input = ConsoleUtils.readLine(prompt, !param.required);
+        String input = ConsoleUtils.readLine(displayPrompt, !param.required);
         if(!param.required) {
             if(AssertUtils.isBlank(input)) {
                 input = VelocityUtils.processWithVelocity(param.value);
