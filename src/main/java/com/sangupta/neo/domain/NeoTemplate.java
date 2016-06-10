@@ -24,16 +24,48 @@ package com.sangupta.neo.domain;
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.neo.NeoRuntimeException;
 
+/**
+ * Defines the overall structure of a Neo template that is used
+ * to create projects.
+ * 
+ * @author sangupta
+ *
+ */
 public class NeoTemplate {
     
+    /**
+     * The name of this template
+     */
     public String name;
     
+    /**
+     * The version of this template - should be semantic versioning
+     */
     public String version;
 
+    /**
+     * The description of this template
+     */
     public String description;
     
+    /**
+     * The URL that points to neo.json file so that we can check if there are updates available or not.
+     */
+    public String updateUrl;
+    
+    /**
+     * The author information for this template
+     */
+    public NeoTemplateAuthor[] authors;
+    
+    /**
+     * The input parameters that need to be read from user
+     */
     public NeoInputParam[] params;
     
+    /**
+     * Process actions that create the project for us
+     */
     public NeoProcess[] process;
 
     /**
