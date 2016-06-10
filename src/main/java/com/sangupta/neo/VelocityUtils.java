@@ -23,8 +23,10 @@ package com.sangupta.neo;
 
 import java.io.StringWriter;
 import java.lang.reflect.Modifier;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -49,6 +51,10 @@ public class VelocityUtils {
      * My private logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(VelocityUtils.class);
+    
+    private static final UUID UNIQUE_ID = UUID.randomUUID();
+    
+    private static final long EPOCH = System.currentTimeMillis();
     
     /**
      * Load all custom Velocity directives
@@ -83,6 +89,11 @@ public class VelocityUtils {
             StringWriter writer = new StringWriter();
             Map<String, Object> properties = NeoGenerator.getInstance().getProperties();
             VelocityContext context = new VelocityContext(properties);
+            
+            // append the default variables
+            addDefaultContextValues(context);
+            
+            // evaluate the template
             Velocity.evaluate(context, writer, "test", contents);
             
             return writer.toString();
@@ -90,6 +101,20 @@ public class VelocityUtils {
             LOGGER.error("Error evaluating content: {}", contents);
             throw e;
         }
+    }
+
+    /**
+     * Add the default variables to the context.
+     * 
+     * @param context
+     */
+    private static void addDefaultContextValues(VelocityContext context) {
+        Calendar calendar = Calendar.getInstance();
+        context.put("year", calendar.get(Calendar.YEAR));
+        context.put("date", calendar.get(Calendar.DAY_OF_MONTH));
+        context.put("month", calendar.get(Calendar.MONTH));
+        context.put("uuid", UNIQUE_ID.toString());
+        context.put("epoch", EPOCH);
     }
 
 }
